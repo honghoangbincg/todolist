@@ -1,7 +1,8 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
 import TodoList from "./components/TodoList";
+const TODO_APP_STORAGE_KEY = "TODO_APP";
 const DivApp = styled.div`
   max-width: 500px;
   margin-left: auto;
@@ -36,6 +37,15 @@ const Button = styled.button`
 const App = () => {
   const [texInput, setTextInput] = useState("");
   const [todolist, setTodoList] = useState([]);
+  useEffect(() => {
+    const storagedTodoList = localStorage.getItem(TODO_APP_STORAGE_KEY);
+    if (storagedTodoList) {
+      setTodoList(JSON.parse(storagedTodoList));
+    }
+  }, []);
+  useEffect(() => {
+    localStorage.setItem(TODO_APP_STORAGE_KEY, JSON.stringify(todolist));
+  }, [todolist]);
 
   const onChangeTextInput = useCallback((e) => {
     setTextInput(e.target.value);
@@ -65,6 +75,25 @@ const App = () => {
       setTextInput("");
     }
   };
+  const onClickButtonCheck = useCallback((id) => {
+    setTodoList((prevState) => {
+      return prevState.map((todo) => {
+        return todo.id === id ? { ...todo, isCompleted: true } : todo;
+      });
+    });
+  }, []);
+  const onClickButtonRemove = useCallback((id) => {
+    setTodoList((prevState) => {
+      for (let i = 0; i < prevState.length; i++) {
+        if (prevState[i].id === id) {
+          prevState.splice(i, 1);
+        }
+      }
+      return prevState.map((todo) => {
+        return todo;
+      });
+    });
+  }, []);
   return (
     <DivApp>
       <h3 style={{ textAlign: "center" }}>TO-DO LIST</h3>
@@ -79,7 +108,11 @@ const App = () => {
         <Button onClick={onClickButtonAdd}>+</Button>
       </div>
       <p>YOUR TODOS:</p>
-      <TodoList todolist={todolist} />
+      <TodoList
+        todolist={todolist}
+        onClickButtonCheck={onClickButtonCheck}
+        onClickButtonRemove={onClickButtonRemove}
+      />
     </DivApp>
   );
 };

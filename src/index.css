@@ -10,7 +10,11 @@ body {
 #root {
   width: 100%;
 }
-.form-group {
+.form-group,
+.action-box {
   display: flex;
   align-items: center;
+}
+.action-box {
+  gap: 10px;
 }
