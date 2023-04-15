@@ -7,7 +7,6 @@ const DivApp = styled.div`
   margin-left: auto;
   margin-right: auto;
   margin-top: 100px;
-  text-align: center;
 `;
 const Input = styled.input`
   border-radius: 3px 0px 0px 3px;
@@ -68,7 +67,7 @@ const App = () => {
   };
   return (
     <DivApp>
-      <h3>TO-DO LIST</h3>
+      <h3 style={{ textAlign: "center" }}>TO-DO LIST</h3>
       <div className="form-group">
         <Input
           type="text"
@@ -79,6 +78,7 @@ const App = () => {
         />
         <Button onClick={onClickButtonAdd}>+</Button>
       </div>
+      <p>YOUR TODOS:</p>
       <TodoList todolist={todolist} />
     </DivApp>
   );
